@@ -14,14 +14,6 @@ block content
 				ajax: {
 					url: '/ext/connections',
 					dataSrc: function ( json ) {
-						/*for ( var i=0;i<json.data.length; i++ ) {
-							json.data[i]['timestamp'] = new Date((json.data[i]['timestamp']) * 1000).toUTCString();
-							json.data[i]['txid'] = "<a href='/tx/" + json.data[i]['txid'] + "'>" + json.data[i]['txid'] + "</a>";
-							json.data[i]['blockindex'] = "<a href='/block/" + json.data[i]['blockhash'] + "'>" + json.data[i]['blockindex'] + "</a>";
-							var amount = json.data[i]['total'] / 100000000;
-							json.data[i]['total'] = amount.toFixed(8);
-							json.data[i]['recipients'] = json.data[i]['vout'].length;
-						}*/
 						return json.data;
 					}
 				},
@@ -43,7 +35,36 @@ block content
 					{ data: 'country', width: '25%'}
 				]
 			});
+			
+			$.ajax({
+				url: "/ext/connections",
+				method: 'post',
+				dataType: 'json',
+				success: function(peers)
+				{
+					var mapData = {};
+					for ( var i=0;i<peers.data.length; i++ ) {
+						mapData[peers.data[i].country_code.toUpperCase()] = 1.0 + (mapData[peers.data[i].country_code.toUpperCase()] || 0.0);
+					}
+					$('#worldmap').vectorMap({
+						map: 'world_mill',
+						backgroundColor: '#DDDDDD',
+						series: {
+							regions: [{
+								values: mapData,
+								scale: ['#C8EEFF', '#0071A4'],
+								attribute: 'fill',
+								normalizeFunction: 'polynomial'
+							}]
+						},
+						onRegionTipShow: function(e, el, code){
+							el.html(el.html()+' <b>'+(mapData[code]?mapData[code]:'0')+'</b>');
+						}
+					});				
+				}
+			});
 		});
+	#worldmap(style="width: 55%; height: 300px; margin-left: 22%; margin-bottom: 15%")
 	.col-md-12(style="margin-bottom: 4%")
 		.row.text-center(style='margin-bottom:15px;')
 			i #{settings.locale.net_warning}
