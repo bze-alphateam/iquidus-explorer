@@ -35,7 +35,8 @@ block content
 					{ data: 'status', width: '15%' },
 					{ data: 'lastseen', width: '15%' },
 					{ data: 'lastpaid', width: '15%' },
-				]
+				],
+				order: [[ 0, "asc" ]]
 			});
 			$.ajax({
 				url: "/ext/masternodes",
