@@ -18,7 +18,7 @@ var app = express();
 bitcoinapi.setWalletDetails(settings.wallet);
 if (settings.heavy != true) {
   bitcoinapi.setAccess('only', ['getinfo', 'getnetworkhashps', 'getmininginfo','getdifficulty', 'getconnectioncount',
-    'getblockcount', 'getblockhash', 'getblock', 'getrawtransaction', 'getpeerinfo', 'gettxoutsetinfo']);
+    'getblockcount', 'getblockhash', 'getblock', 'getrawtransaction', 'getpeerinfo', 'gettxoutsetinfo', 'getmasternodecount', 'listmasternodes']);
 } else {
   // enable additional heavy api calls
   /*
@@ -35,7 +35,7 @@ if (settings.heavy != true) {
   bitcoinapi.setAccess('only', ['getinfo', 'getstakinginfo', 'getnetworkhashps', 'getdifficulty', 'getconnectioncount',
     'getblockcount', 'getblockhash', 'getblock', 'getrawtransaction','getmaxmoney', 'getvote',
     'getmaxvote', 'getphase', 'getreward', 'getnextrewardestimate', 'getnextrewardwhenstr',
-    'getnextrewardwhensec', 'getsupply', 'gettxoutsetinfo']);
+    'getnextrewardwhensec', 'getsupply', 'gettxoutsetinfo', 'getmasternodecount', 'listmasternodes']);
 }
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -104,6 +104,12 @@ app.use('/ext/connections', function(req,res){
   db.get_peers(function(peers){
     res.send({data: peers});
   });
+});
+
+app.use('/ext/masternodes', function(req,res){
+    db.get_mns(function(mns){
+        res.send({data: mns});
+    });
 });
 
 // locals

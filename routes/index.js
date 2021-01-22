@@ -194,6 +194,10 @@ router.get('/network', function(req, res) {
   res.render('network', {active: 'network'});
 });
 
+router.get('/masternodes', function(req, res) {
+  res.render('masternodes', {active: 'masternodes'});
+});
+
 router.get('/reward', function(req, res){
   //db.get_stats(settings.coin, function (stats) {
     console.log(stats);

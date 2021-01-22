@@ -1,0 +1,62 @@
+extends layout
+
+block content
+	script.
+		$(document).ready(function(){
+			var ctable = $('#masternodes-table').dataTable( {
+				autoWidth: true,
+				searching: false,
+				ordering: true,
+				responsive: true,
+				lengthChange: true,
+				processing: true,
+				stateSave: true,
+				ajax: {
+					url: '/ext/masternodes',
+					dataSrc: function ( json ) {
+						/*for ( var i=0;i<json.data.length; i++ ) {
+							json.data[i]['timestamp'] = new Date((json.data[i]['timestamp']) * 1000).toUTCString();
+							json.data[i]['txid'] = "<a href='/tx/" + json.data[i]['txid'] + "'>" + json.data[i]['txid'] + "</a>";
+							json.data[i]['blockindex'] = "<a href='/block/" + json.data[i]['blockhash'] + "'>" + json.data[i]['blockindex'] + "</a>";
+							var amount = json.data[i]['total'] / 100000000;
+							json.data[i]['total'] = amount.toFixed(8);
+							json.data[i]['recipients'] = json.data[i]['vout'].length;
+						}*/
+						return json.data;
+					}
+				},
+				columnDefs: [
+					{
+						"targets": 3,
+						"data": 'country',
+						"render": function ( data, type, row )
+						{
+							if (row.country_code == '') return data;
+							return '<span class="flag-icon flag-icon-' + row.country_code + '"></span> ' + data;
+						}
+					}
+				],
+				columns: [
+					{ data: 'rank', width: '10%' },
+					{ data: 'addr', width: '20%' },
+					{ data: 'country', width: '15%'},
+					{ data: 'status', width: '15%' },
+					{ data: 'lastseen', width: '15%' },
+					{ data: 'lastpaid', width: '15%' },
+				]
+			});
+		});
+	.col-md-12(style="margin-bottom: 4%")
+		.row.text-center(style='margin-bottom:15px;')
+			i #{settings.locale.net_warning}
+		.panel.panel-default
+			.panel-heading
+				strong #{settings.locale.net_connections}
+			table#masternodes-table.table.table-bordered.table-striped
+				thead
+					tr
+						th.text-center #{settings.locale.net_address}
+						th.text-center #{settings.locale.net_protocol}
+						th.text-center #{settings.locale.net_subversion}
+						th.text-center #{settings.locale.net_country}
+				tbody.text-center
