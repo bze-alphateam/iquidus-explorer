@@ -26,6 +26,14 @@ block content
 							if (row.country_code == '') return data;
 							return '<span class="flag-icon flag-icon-' + row.country_code + '"></span> ' + data;
 						}
+					},
+					{
+						"targets": 1,
+						"data": 'addr',
+						"render": function (data, type, row) {
+							if (row.country_code == '') return data;
+							return '<a href="/address/' + row.addr + '">'+ data +'</a> ';
+						}
 					}
 				],
 				columns: [
